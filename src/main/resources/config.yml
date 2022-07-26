@@ -1,0 +1,75 @@
+token: ''
+bot-status: 'Minecraft'
+
+mysql:
+  enable: false
+  host: 'localhost'
+  database: 'minecraft'
+  username: 'root'
+  password: ''
+  port: 3306
+
+table-name: "discord_boosters"
+columns:
+  discord: discord_id
+  uuid: minecraft_uuid
+  code: code
+  booster: server_booster
+  link-reward: link_reward_claimed
+  booster-reward: booster_reward_claimed
+
+# menu settings
+gui:
+  title: "Discord Rewards"
+  size: 3
+  items:
+    link:
+      slot: 12
+      material: CHEST
+      name: "&eLink Reward"
+      lore:
+        - "&eHere is a reward for"
+        - "&7linking your account"
+        - ""
+        - "&eYou can collect this in: {time}"
+    booster:
+      slot: 14
+      material: ENDER_CHEST
+      name: "&dBooster Reward"
+      lore:
+        - "&eHere is a reward for"
+        - "&7boosting our server"
+        - ""
+        - "&eYou can collect this in: &b{time}"
+    not-booster:
+      material: BARRIER
+      name: "&e-/-"
+      lore:
+        - "&aPlease boost our server so you can collect this reward :)"
+
+
+# reward settings
+rewards:
+  link:
+    delay: 1d
+    commands:
+      - "give {player} diamond 16"
+  booster:
+    delay: 7d
+    commands:
+      - "give {player} diamond 32"
+      - "give {player} emerald 16"
+
+messages:
+  general:
+    - "&eCheck out our discord: &b<link>"
+  unlinked: "&cYou are not linked to Discord."
+  cannot-claim  : "&cYou can't collect this reward. :("
+
+  on-claim-link: "&aThanks for linking your account!"
+  on-claim-booster: "&aThanks for boosting our server :)"
+
+  already-linked: "&cYou are already linked."
+  code-not-found: "&cWe could not find any records with this code"
+  successfully-linked: "&aYou were successfully linked!"
+  successfully-unlinked: "&cYou were successfully unlinked!"

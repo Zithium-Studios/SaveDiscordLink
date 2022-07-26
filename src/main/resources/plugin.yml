@@ -1,0 +1,10 @@
+name: SaveDiscordLink
+version: ${project.version}
+main: com.jaoow.discordbridge.DiscordLink
+author: Jaoow
+commands:
+  discord:
+    description: Discord main command
+  rewards:
+    aliases: [ reward ]
+    description: see discord rewards
