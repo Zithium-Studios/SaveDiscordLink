@@ -3,9 +3,15 @@ package com.jaoow.discordbridge.commands.subcommands;
 import com.jaoow.discordbridge.BridgeAPI;
 import com.jaoow.discordbridge.DiscordLink;
 import com.jaoow.discordbridge.config.Messages;
+import com.jaoow.discordbridge.config.Settings;
 import lombok.SneakyThrows;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Objects;
 
 public class LinkCommand implements SubCommand {
 
@@ -35,13 +41,26 @@ public class LinkCommand implements SubCommand {
                 return;
             }
 
-            bridgeAPI.assignPlayer(player, codeStr)
-                    .whenCompleteAsync((response, throwable) -> {
+            bridgeAPI.assignPlayer(player, codeStr, id -> {
+                        Guild guild = DiscordLink.getInstance().getJda().getGuilds().get(0);
+                        Role roleById = guild.getRoleById(Settings.LINKED_ROLE);
+                        if (roleById != null) {
+                            guild.addRoleToMember(id, roleById).queue();
+                        }
+                    })
+                    .whenComplete((response, throwable) -> {
 
                         if (throwable != null) {
                             throwable.printStackTrace();
                             return;
                         }
+
+                        Bukkit.getScheduler().runTask(DiscordLink.getInstance(), () -> {
+                            for (String command : Settings.LINKED_COMMANDS) {
+                                Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                                        command.replace("{player}", player.getName()));
+                            }
+                        });
 
                         switch (response) {
                             case SUCCESS:

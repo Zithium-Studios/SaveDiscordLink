@@ -21,7 +21,7 @@ public class SlashCommandsListener extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         // send thinking message
-        event.deferReply().queue();
+        event.deferReply(true).queue();
         logger.info(event.getUser().getAsTag() + " called discord command: " + event.getName());
         // switch for appropriate handler
         if (event.getName().equals("verify")) {

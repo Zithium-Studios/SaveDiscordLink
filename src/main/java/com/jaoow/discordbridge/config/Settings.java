@@ -3,11 +3,17 @@ package com.jaoow.discordbridge.config;
 import com.jaoow.discordbridge.DiscordLink;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.List;
+
 public class Settings {
 
     private final static FileConfiguration CONFIGURATION = DiscordLink.getInstance().getConfig();
 
     public static final String TABLE_NAME = CONFIGURATION.getString("table-name");
+    public static final String LINKED_ROLE = CONFIGURATION.getString("linked-role", "");
+
+    public static final List<String> LINKED_COMMANDS = CONFIGURATION.getStringList("commands.linked");
+    public static final List<String> UNLINKED_COMMANDS = CONFIGURATION.getStringList("commands.unlinked");
 
     public static final String DISCORD_COLLUM = CONFIGURATION.getString("columns.discord");
     public static final String UUID_COLLUM = CONFIGURATION.getString("columns.uuid");

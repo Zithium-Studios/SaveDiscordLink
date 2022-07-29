@@ -71,20 +71,22 @@ public final class DiscordLink extends JavaPlugin {
             return;
         }
 
-        // try to open discord gateway
-        try {
-            /* TODO: Figure out needed GatewayIntents
-             *   Needed OAuth2 scopes: bot, applications.commands
-             *   Bot permissions int: 413122553856
-             */
-            this.jda = JDABuilder.createLight(getConfig().getString("token"))
-                    .addEventListeners(new BotInit())
-                    .setActivity(Activity.playing(getConfig().getString("bot-status")))
-                    .build();
-        } catch (LoginException e) {
-            // disable plugin on Login failure
-            pluginLogger.warning(e.toString());
-            prematureDisable();
+        if (getConfig().getBoolean("enable-bot", true)) {
+            // try to open discord gateway
+            try {
+                /* TODO: Figure out needed GatewayIntents
+                 *   Needed OAuth2 scopes: bot, applications.commands
+                 *   Bot permissions int: 413122553856
+                 */
+                this.jda = JDABuilder.createLight(getConfig().getString("token"))
+                        .addEventListeners(new BotInit())
+                        .setActivity(Activity.playing(getConfig().getString("bot-status")))
+                        .build();
+            } catch (LoginException e) {
+                // disable plugin on Login failure
+                pluginLogger.warning(e.toString());
+                prematureDisable();
+            }
         }
 
 

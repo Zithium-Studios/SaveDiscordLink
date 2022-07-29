@@ -1,5 +1,6 @@
 package com.jaoow.discordbridge;
 
+import com.jaoow.discordbridge.config.Settings;
 import com.jaoow.discordbridge.database.Database;
 import com.jaoow.discordbridge.database.querys.Query;
 import com.jaoow.discordbridge.database.querys.QueryType;
@@ -17,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -74,6 +76,25 @@ public class BridgeAPI {
         });
     }
 
+    public CompletableFuture<Optional<String>> getDiscordIdByPlayer(OfflinePlayer player) {
+        return CompletableFuture.supplyAsync(() -> {
+            Query playerQuery = Query.builder()
+                    .connection(database.getConnection())
+                    .query(QueryType.SELECT_FROM_UUID)
+                    .parameters(new Object[]{player.getUniqueId()})
+                    .build();
+
+            try (ResultSet result = database.executeQuery(playerQuery)) {
+                if (result.next()) {
+                    return Optional.of(result.getString(DISCORD_COLLUM));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return Optional.empty();
+        });
+    }
+
     public CompletableFuture<Void> consumeAll(Consumer<ResultSet> resultSetConsumer) {
         return CompletableFuture.runAsync(() -> {
             Query playerQuery = Query.builder()
@@ -92,8 +113,7 @@ public class BridgeAPI {
     }
 
 
-
-    public CompletableFuture<Response> assignPlayer(OfflinePlayer player, String codeStr) {
+    public CompletableFuture<Response> assignPlayer(OfflinePlayer player, String codeStr, Consumer<String> discordIdConsumer) {
         return CompletableFuture.supplyAsync(() -> {
             // null check
             if (codeStr.equals("null")) {
@@ -114,6 +134,7 @@ public class BridgeAPI {
                             .parameters(new Object[]{player.getUniqueId(), "null", codeStr}).build();
 
                     database.executeUpdate(updateQuery);
+                    discordIdConsumer.accept(result.getString(DISCORD_COLLUM));
                     return Response.SUCCESS;
                 } else {
                     return Response.NOT_FOUND;

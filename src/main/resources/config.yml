@@ -1,5 +1,7 @@
 token: ''
 bot-status: 'Minecraft'
+linked-role: ''
+enable-bot: true
 
 mysql:
   enable: false
@@ -59,6 +61,12 @@ rewards:
     commands:
       - "give {player} diamond 32"
       - "give {player} emerald 16"
+
+commands:
+  link:
+    - "say {player} linked their account"
+  unlink:
+    - "say {player} unlinked their account"
 
 messages:
   general:
