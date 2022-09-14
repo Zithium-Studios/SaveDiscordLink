@@ -2,6 +2,7 @@ name: SaveDiscordLink
 version: ${project.version}
 main: com.jaoow.discordbridge.DiscordLink
 author: Jaoow
+api-version: 1.19
 commands:
   discord:
     description: Discord main command
